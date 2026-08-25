@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>JARVIS V2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100svh;background:radial-gradient(circle at 50% 28%,#0b4050 0,#06141a 30%,#010507 72%);color:#eaffff;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;padding:22px}
+main{width:min(460px,100%)}header{display:flex;justify-content:space-between;color:#8dcbd7;font-size:11px;letter-spacing:2px}
+.orb{width:245px;height:245px;margin:25px auto;position:relative;display:grid;place-items:center}.ring{position:absolute;border:1px solid #5fe9ff55;border-radius:50%;animation:s 14s linear infinite}.a{width:240px;height:240px;border-style:dashed}.b{width:195px;height:195px;animation-direction:reverse}.c{width:155px;height:155px}
+#jarvis{width:125px;height:125px;border-radius:50%;border:1px solid #73efff;background:#08232c;color:white;box-shadow:0 0 45px #43dfff66,inset 0 0 30px #43dfff33;font-weight:900;letter-spacing:3px;font-size:17px}#jarvis.on{animation:p .55s infinite alternate}
+.card{border:1px solid #62e9ff44;background:#061b23cc;border-radius:22px;padding:19px;backdrop-filter:blur(15px)}#status{font-size:19px;font-weight:800}#heard{color:#91bdc5;margin-top:8px;min-height:42px;line-height:1.4}.btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:14px}.btns button{padding:14px;border-radius:14px;border:1px solid #5fe9ff44;background:#0a2b36;color:#eaffff;font-weight:800}.help{margin-top:15px;color:#88b7c0;font-size:12px;line-height:1.6}.help b{color:#d8fbff}@keyframes s{to{transform:rotate(360deg)}}@keyframes p{to{box-shadow:0 0 80px #43dfff,inset 0 0 40px #43dfff55}}
+</style></head><body><main>
+<header><span>JARVIS // V2</span><span id="clock"></span></header>
+<div class="orb"><div class="ring a"></div><div class="ring b"></div><div class="ring c"></div><button id="jarvis">JARVIS</button></div>
+<section class="card"><div id="status">Sistem hazır.</div><div id="heard">JARVIS'e dokun ve komut ver.</div>
+<div class="btns"><button id="listen">🎙 Dinle</button><button id="stop">⏹ Durdur</button></div></section>
+<div class="help"><b>Örnekler:</b> Jarvis / Carvis • YouTube aç • Instagram aç • Spotify aç • TikTok aç • WhatsApp aç • Google aç • Google'da Ronaldo ara • YouTube'da Minecraft ara • Spotify'da Lvbel C5 ara • haritaları aç • hava durumunu aç • saat kaç • bugün ayın kaçı • hesap makinesini aç • çeviriyi aç • Gmail aç • Google Drive aç • ChatGPT aç • Netflix aç • Amazon aç • Trendyol aç • Hepsiburada aç • sus • ne yapabiliyorsun</div>
+</main><script>
+const $=x=>document.getElementById(x),status=$("status"),heard=$("heard"),core=$("jarvis");let rec,on=false;
+function clock(){let d=new Date;$("clock").textContent=d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}clock();setInterval(clock,1000);
+function say(t){if(!speechSynthesis)return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="tr-TR";u.rate=.92;u.pitch=.88;speechSynthesis.speak(u)}
+function open(u){location.href=u} function norm(t){return t.toLocaleLowerCase("tr-TR").replace(/[.,!?]/g,"").trim()}
+const sites=[
+ [["youtube"],"https://www.youtube.com/","YouTube"],
+ [["instagram"],"https://www.instagram.com/","Instagram"],
+ [["spotify"],"https://open.spotify.com/","Spotify"],
+ [["tiktok","tik tok"],"https://www.tiktok.com/","TikTok"],
+ [["whatsapp","vatsap"],"https://web.whatsapp.com/","WhatsApp"],
+ [["gmail"],"https://mail.google.com/","Gmail"],
+ [["drive","google drive"],"https://drive.google.com/","Google Drive"],
+ [["chatgpt","chat gpt"],"https://chatgpt.com/","ChatGPT"],
+ [["netflix"],"https://www.netflix.com/","Netflix"],
+ [["amazon"],"https://www.amazon.com.tr/","Amazon"],
+ [["trendyol"],"https://www.trendyol.com/","Trendyol"],
+ [["hepsiburada","hepsi burada"],"https://www.hepsiburada.com/","Hepsiburada"],
+ [["harita","haritalar","maps"],"https://maps.google.com/","Haritalar"],
+ [["hava durumu"],"https://www.google.com/search?q=hava+durumu","Hava durumu"],
+ [["hesap makinesi"],"https://www.google.com/search?q=hesap+makinesi","Hesap makinesi"],
+ [["çeviri","çeviriyi","translate"],"https://translate.google.com/","Google Çeviri"]
+];
+function cmd(raw){
+ let t=norm(raw);heard.textContent='Duydum: “'+raw+'”';
+ if(/\b(jarvis|carvis|carves|cervis)\b/.test(t)){status.textContent="Hazırım.";say("Efendim?");return}
+ if(t.includes("sus")||t.includes("sessiz")||t.includes("dur konuşma")){speechSynthesis.cancel();status.textContent="Sessiz mod.";return}
+ if(t.includes("saat kaç")){let x=new Date().toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});status.textContent=x;say("Saat "+x);return}
+ if(t.includes("bugün ayın kaçı")||t.includes("tarih ne")){let x=new Date().toLocaleDateString("tr-TR",{day:"numeric",month:"long",year:"numeric"});status.textContent=x;say("Bugün "+x);return}
+ if(t.includes("ne yapabiliyorsun")||t.includes("komutları söyle")){status.textContent="Birçok web uygulamasını açabilir ve arama yapabilirim.";say("Uygulamaları açabilir, Google, YouTube ve Spotify'da arama yapabilir, saat ve tarihi söyleyebilirim.");return}
+ let m=t.match(/youtube(?:'da|da)?\s+(.+?)\s+ara$/);if(m){say(m[1]+" YouTube'da aranıyor");setTimeout(()=>open("https://www.youtube.com/results?search_query="+encodeURIComponent(m[1])),400);return}
+ m=t.match(/spotify(?:'da|da)?\s+(.+?)\s+ara$/);if(m){say(m[1]+" Spotify'da aranıyor");setTimeout(()=>open("https://open.spotify.com/search/"+encodeURIComponent(m[1])),400);return}
+ m=t.match(/google(?:'da|da)?\s+(.+?)\s+ara$/);if(m){say(m[1]+" aranıyor");setTimeout(()=>open("https://www.google.com/search?q="+encodeURIComponent(m[1])),400);return}
+ for(const [names,url,name] of sites){if(names.some(n=>t.includes(n))&&(t.includes("aç")||t.includes("gir"))){status.textContent=name+" açılıyor.";say(name+" açılıyor.");setTimeout(()=>open(url),400);return}}
+ if((t==="google aç")||t==="google'a gir"||t==="google gir"){say("Google açılıyor.");setTimeout(()=>open("https://www.google.com/"),400);return}
+ status.textContent="Bu komutu henüz bilmiyorum.";say("Bu komutu henüz bilmiyorum.");
+}
+function make(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){status.textContent="Bu tarayıcı ses tanımayı desteklemiyor.";heard.textContent="Siteyi HTTPS olarak yayınlayıp destekleyen tarayıcıda açacağız.";return null}
+ let r=new SR();r.lang="tr-TR";r.interimResults=false;r.continuous=false;
+ r.onstart=()=>{on=true;core.classList.add("on");status.textContent="Dinliyorum..."}
+ r.onresult=e=>cmd(e.results[0][0].transcript);
+ r.onerror=e=>{status.textContent="Ses tanıma hatası.";heard.textContent="Hata: "+e.error}
+ r.onend=()=>{on=false;core.classList.remove("on")};return r
+}
+function start(){if(on)return;if(!rec)rec=make();try{rec&&rec.start()}catch(e){}}
+core.onclick=()=>{say("Efendim?");setTimeout(start,220)};$("listen").onclick=start;$("stop").onclick=()=>{try{rec&&rec.stop()}catch(e){};speechSynthesis.cancel();status.textContent="Durduruldu."}
+</script></body></html>
